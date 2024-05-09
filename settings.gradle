@@ -23,23 +23,18 @@ def isJenkins = System.getenv('JENKINS_URL') != null
 def isCI = isGithubActions || isJenkins
 
 gradleEnterprise {
-    server = "https://ge.apache.org"
+    server = "https://develocity-field.gradle.com"
     buildScan {
         capture { taskInputFiles = true }
         uploadInBackground = !isCI
         publishAlways()
         publishIfAuthenticated()
-        obfuscation {
-            // This obfuscates the IP addresses of the build machine in the build scan.
-            // Alternatively, the build scan will provide the hostname for troubleshooting host-specific issues.
-            ipAddresses { addresses -> addresses.collect { address -> "0.0.0.0"} }
-        }
     }
 }
 
 buildCache {
     local {
-        enabled = !isCI
+        enabled = false
     }
 
     remote(gradleEnterprise.buildCache) {
