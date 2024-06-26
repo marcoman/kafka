@@ -35,20 +35,20 @@ import org.apache.kafka.common.errors.UnknownTopicOrPartitionException;
 import org.apache.kafka.common.message.ConsumerGroupDescribeResponseData;
 import org.apache.kafka.common.message.ConsumerGroupHeartbeatRequestData;
 import org.apache.kafka.common.message.ConsumerGroupHeartbeatResponseData;
-import org.apache.kafka.common.message.DescribeGroupsResponseData;
 import org.apache.kafka.common.message.DeleteGroupsResponseData;
+import org.apache.kafka.common.message.DescribeGroupsResponseData;
 import org.apache.kafka.common.message.HeartbeatRequestData;
 import org.apache.kafka.common.message.HeartbeatResponseData;
 import org.apache.kafka.common.message.JoinGroupRequestData;
 import org.apache.kafka.common.message.JoinGroupResponseData;
+import org.apache.kafka.common.message.LeaveGroupRequestData;
+import org.apache.kafka.common.message.LeaveGroupResponseData;
 import org.apache.kafka.common.message.ListGroupsRequestData;
 import org.apache.kafka.common.message.ListGroupsResponseData;
 import org.apache.kafka.common.message.OffsetDeleteRequestData;
 import org.apache.kafka.common.message.OffsetDeleteResponseData;
 import org.apache.kafka.common.message.OffsetFetchRequestData;
 import org.apache.kafka.common.message.OffsetFetchResponseData;
-import org.apache.kafka.common.message.LeaveGroupRequestData;
-import org.apache.kafka.common.message.LeaveGroupResponseData;
 import org.apache.kafka.common.message.SyncGroupRequestData;
 import org.apache.kafka.common.message.SyncGroupResponseData;
 import org.apache.kafka.common.message.TxnOffsetCommitRequestData;
@@ -57,6 +57,7 @@ import org.apache.kafka.common.network.ClientInformation;
 import org.apache.kafka.common.network.ListenerName;
 import org.apache.kafka.common.protocol.ApiKeys;
 import org.apache.kafka.common.protocol.Errors;
+import org.apache.kafka.common.record.CompressionType;
 import org.apache.kafka.common.requests.RequestContext;
 import org.apache.kafka.common.requests.RequestHeader;
 import org.apache.kafka.common.requests.TransactionResult;
@@ -70,6 +71,7 @@ import org.apache.kafka.coordinator.group.metrics.GroupCoordinatorMetrics;
 import org.apache.kafka.coordinator.group.runtime.CoordinatorRuntime;
 import org.apache.kafka.server.record.BrokerCompressionType;
 import org.apache.kafka.server.util.FutureUtils;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -117,6 +119,7 @@ public class GroupCoordinatorServiceTest {
     private GroupCoordinatorConfig createConfig() {
         return new GroupCoordinatorConfig(
             1,
+            10,
             45,
             5,
             Integer.MAX_VALUE,
@@ -131,7 +134,8 @@ public class GroupCoordinatorServiceTest {
             600000L,
             24 * 60 * 1000L,
             5000,
-            ConsumerGroupMigrationPolicy.DISABLED
+            ConsumerGroupMigrationPolicy.DISABLED,
+            CompressionType.NONE
         );
     }
 
@@ -674,9 +678,10 @@ public class GroupCoordinatorServiceTest {
 
         service.startup(() -> 1);
 
-        when(runtime.scheduleReadOperation(
+        when(runtime.scheduleWriteOperation(
             ArgumentMatchers.eq("classic-group-heartbeat"),
             ArgumentMatchers.eq(new TopicPartition("__consumer_offsets", 0)),
+            ArgumentMatchers.eq(Duration.ofMillis(5000)),
             ArgumentMatchers.any()
         )).thenReturn(CompletableFuture.completedFuture(
             new HeartbeatResponseData()
@@ -706,9 +711,10 @@ public class GroupCoordinatorServiceTest {
 
         service.startup(() -> 1);
 
-        when(runtime.scheduleReadOperation(
+        when(runtime.scheduleWriteOperation(
             ArgumentMatchers.eq("classic-group-heartbeat"),
             ArgumentMatchers.eq(new TopicPartition("__consumer_offsets", 0)),
+            ArgumentMatchers.eq(Duration.ofMillis(5000)),
             ArgumentMatchers.any()
         )).thenReturn(FutureUtils.failedFuture(
             new CoordinatorLoadInProgressException(null)
@@ -738,9 +744,10 @@ public class GroupCoordinatorServiceTest {
 
         service.startup(() -> 1);
 
-        when(runtime.scheduleReadOperation(
+        when(runtime.scheduleWriteOperation(
             ArgumentMatchers.eq("classic-group-heartbeat"),
             ArgumentMatchers.eq(new TopicPartition("__consumer_offsets", 0)),
+            ArgumentMatchers.eq(Duration.ofMillis(5000)),
             ArgumentMatchers.any()
         )).thenReturn(FutureUtils.failedFuture(
             new RebalanceInProgressException()

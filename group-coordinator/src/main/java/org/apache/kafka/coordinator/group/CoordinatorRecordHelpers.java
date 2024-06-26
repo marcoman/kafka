@@ -19,6 +19,7 @@ package org.apache.kafka.coordinator.group;
 import org.apache.kafka.common.Uuid;
 import org.apache.kafka.common.record.RecordBatch;
 import org.apache.kafka.common.requests.OffsetCommitRequest;
+import org.apache.kafka.coordinator.group.classic.ClassicGroup;
 import org.apache.kafka.coordinator.group.consumer.ConsumerGroupMember;
 import org.apache.kafka.coordinator.group.consumer.TopicMetadata;
 import org.apache.kafka.coordinator.group.generated.ConsumerGroupCurrentMemberAssignmentKey;
@@ -37,7 +38,6 @@ import org.apache.kafka.coordinator.group.generated.GroupMetadataKey;
 import org.apache.kafka.coordinator.group.generated.GroupMetadataValue;
 import org.apache.kafka.coordinator.group.generated.OffsetCommitKey;
 import org.apache.kafka.coordinator.group.generated.OffsetCommitValue;
-import org.apache.kafka.coordinator.group.classic.ClassicGroup;
 import org.apache.kafka.server.common.ApiMessageAndVersion;
 import org.apache.kafka.server.common.MetadataVersion;
 
@@ -65,6 +65,8 @@ public class CoordinatorRecordHelpers {
         String groupId,
         ConsumerGroupMember member
     ) {
+        List<String> topicNames = new ArrayList<>(member.subscribedTopicNames());
+        Collections.sort(topicNames);
         return new CoordinatorRecord(
             new ApiMessageAndVersion(
                 new ConsumerGroupMemberMetadataKey()
@@ -78,7 +80,7 @@ public class CoordinatorRecordHelpers {
                     .setInstanceId(member.instanceId())
                     .setClientId(member.clientId())
                     .setClientHost(member.clientHost())
-                    .setSubscribedTopicNames(member.subscribedTopicNames())
+                    .setSubscribedTopicNames(topicNames)
                     .setSubscribedTopicRegex(member.subscribedTopicRegex())
                     .setServerAssignor(member.serverAssignorName().orElse(null))
                     .setRebalanceTimeoutMs(member.rebalanceTimeoutMs())
