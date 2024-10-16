@@ -16,6 +16,7 @@
  */
 package kafka.log.remote;
 
+import io.github.pixee.security.BoundedLineReader;
 import kafka.cluster.EndPoint;
 import kafka.cluster.Partition;
 import kafka.log.UnifiedLog;
@@ -3160,9 +3161,9 @@ public class RemoteLogManagerTest {
         ByteBuffer buffer = RemoteLogManager.epochEntriesAsByteBuffer(epochs);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(buffer.array()), StandardCharsets.UTF_8));
 
-        assertEquals(String.valueOf(expectedVersion), bufferedReader.readLine());
-        assertEquals(String.valueOf(epochs.size()), bufferedReader.readLine());
-        assertEquals(expectedEpoch + " " + expectedStartOffset, bufferedReader.readLine());
+        assertEquals(String.valueOf(expectedVersion), BoundedLineReader.readLine(bufferedReader, 5_000_000));
+        assertEquals(String.valueOf(epochs.size()), BoundedLineReader.readLine(bufferedReader, 5_000_000));
+        assertEquals(expectedEpoch + " " + expectedStartOffset, BoundedLineReader.readLine(bufferedReader, 5_000_000));
     }
 
 
