@@ -16,6 +16,7 @@
  */
 package kafka.security;
 
+import java.nio.file.Files;
 import kafka.utils.TestUtils;
 
 import org.apache.kafka.clients.admin.ScramMechanism;
@@ -265,7 +266,7 @@ public class JaasTestUtils {
     }
 
     private static void writeToFile(File file, List<JaasSection> jaasSections) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+        try (BufferedWriter writer = Files.newBufferedWriter(file.toPath())) {
             writer.write(String.join("", jaasSections.stream().map(Object::toString).toArray(String[]::new)));
         }
     }
