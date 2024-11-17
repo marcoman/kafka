@@ -17,6 +17,7 @@
 
 package org.apache.kafka.metadata.properties;
 
+import java.security.SecureRandom;
 import org.apache.kafka.common.DirectoryId;
 import org.apache.kafka.common.Uuid;
 
@@ -164,7 +165,7 @@ public final class MetaPropertiesEnsemble {
         private final Set<String> errorLogDirs;
         private final Map<String, MetaProperties> logDirProps;
         private Optional<String> metaLogDir;
-        private Random random = new Random();
+        private Random random = new SecureRandom();
 
         private PreWriteHandler preWriteHandler = (logDir, isNew, metaProperties) -> {
             LOG.info("Writing out {} {}{}meta.properties file containing {}",

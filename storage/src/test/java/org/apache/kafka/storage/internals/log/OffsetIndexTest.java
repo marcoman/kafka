@@ -17,6 +17,7 @@
 
 package org.apache.kafka.storage.internals.log;
 
+import java.security.SecureRandom;
 import org.apache.kafka.common.errors.InvalidOffsetException;
 import org.apache.kafka.test.TestUtils;
 
@@ -247,7 +248,7 @@ public class OffsetIndexTest {
     }
 
     private List<Integer> monotonicSeq(int base, int len) {
-        Random random = new Random();
+        Random random = new SecureRandom();
         List<Integer> seq = new ArrayList<>(len);
         int last = base;
         for (int i = 0; i < len; i++) {

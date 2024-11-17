@@ -17,6 +17,7 @@
 
 package org.apache.kafka.trogdor.workload;
 
+import java.security.SecureRandom;
 import org.apache.kafka.clients.admin.Admin;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -317,7 +318,7 @@ public class SustainedConnectionWorker implements TaskWorker {
             this.topicName = SustainedConnectionWorker.this.spec.topicName();
             this.consumer = null;
             this.activePartition = null;
-            this.rand = new Random();
+            this.rand = new SecureRandom();
             this.refreshRate = SustainedConnectionWorker.this.spec.refreshRateMs();
 
             // This variable is used to maintain the connection properties.

@@ -16,6 +16,7 @@
  */
 package org.apache.kafka.tools;
 
+import java.security.SecureRandom;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerGroupMetadata;
 import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
@@ -365,7 +366,7 @@ public class TransactionalMessageCopier {
 
         final boolean useGroupMetadata = parsedArgs.getBoolean("useGroupMetadata");
         try {
-            Random random = new Random();
+            Random random = new SecureRandom();
             while (!isShuttingDown.get() && remainingMessages.get() > 0) {
                 System.out.println(statusAsJson(
                     "ProcessLoop",

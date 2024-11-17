@@ -16,6 +16,7 @@
  */
 package org.apache.kafka.clients.producer.internals;
 
+import java.security.SecureRandom;
 import org.apache.kafka.clients.ApiVersions;
 import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.MetadataSnapshot;
@@ -1113,7 +1114,7 @@ public class RecordAccumulatorTest {
     @Test
     public void testSplitFrequency() throws InterruptedException {
         long seed = System.currentTimeMillis();
-        Random random = new Random();
+        Random random = new SecureRandom();
         random.setSeed(seed);
         final int batchSize = 1024;
         final int numMessages = 1000;
@@ -1613,7 +1614,7 @@ public class RecordAccumulatorTest {
 
     private int prepareSplitBatches(RecordAccumulator accum, long seed, int recordSize, int numRecords)
         throws InterruptedException {
-        Random random = new Random();
+        Random random = new SecureRandom();
         random.setSeed(seed);
 
         // First set the compression ratio estimation to be good.

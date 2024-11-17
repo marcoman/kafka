@@ -17,6 +17,7 @@
 
 package org.apache.kafka.controller;
 
+import java.security.SecureRandom;
 import org.apache.kafka.common.DirectoryId;
 import org.apache.kafka.common.Uuid;
 import org.apache.kafka.common.errors.BrokerIdNotRegisteredException;
@@ -150,7 +151,7 @@ public class ClusterControlManager {
                 snapshotRegistry = new SnapshotRegistry(logContext);
             }
             if (replicaPlacer == null) {
-                replicaPlacer = new StripedReplicaPlacer(new Random());
+                replicaPlacer = new StripedReplicaPlacer(new SecureRandom());
             }
             if (featureControl == null) {
                 throw new RuntimeException("You must specify FeatureControlManager");

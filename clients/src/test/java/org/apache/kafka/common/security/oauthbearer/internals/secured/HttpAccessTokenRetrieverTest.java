@@ -19,6 +19,7 @@ package org.apache.kafka.common.security.oauthbearer.internals.secured;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.security.SecureRandom;
 
 import org.junit.jupiter.api.Test;
 
@@ -121,7 +122,7 @@ public class HttpAccessTokenRetrieverTest extends OAuthBearerTest {
     @Test
     public void testCopy() throws IOException {
         byte[] expected = new byte[4096 + 1];
-        Random r = new Random();
+        Random r = new SecureRandom();
         r.nextBytes(expected);
         InputStream in = new ByteArrayInputStream(expected);
         ByteArrayOutputStream out = new ByteArrayOutputStream();

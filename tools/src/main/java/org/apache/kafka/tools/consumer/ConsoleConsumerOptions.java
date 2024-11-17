@@ -16,6 +16,7 @@
  */
 package org.apache.kafka.tools.consumer;
 
+import java.security.SecureRandom;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.MessageFormatter;
 import org.apache.kafka.common.requests.ListOffsetsRequest;
@@ -44,7 +45,7 @@ import joptsimple.OptionSpec;
 
 public final class ConsoleConsumerOptions extends CommandDefaultOptions {
 
-    private static final Random RANDOM = new Random();
+    private static final Random RANDOM = new SecureRandom();
 
     private final OptionSpec<String> topicOpt;
     private final OptionSpec<String> whitelistOpt;

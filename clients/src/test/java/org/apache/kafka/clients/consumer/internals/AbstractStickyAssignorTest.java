@@ -16,6 +16,7 @@
  */
 package org.apache.kafka.clients.consumer.internals;
 
+import java.security.SecureRandom;
 import org.apache.kafka.clients.consumer.ConsumerPartitionAssignor.Subscription;
 import org.apache.kafka.clients.consumer.CooperativeStickyAssignor;
 import org.apache.kafka.clients.consumer.StickyAssignor;
@@ -870,7 +871,7 @@ public abstract class AbstractStickyAssignorTest {
     @ValueSource(booleans = {false, true})
     public void testLargeAssignmentWithMultipleConsumersLeavingAndRandomSubscription(boolean hasConsumerRack) {
         initializeRacks(hasConsumerRack ? RackConfig.BROKER_AND_CONSUMER_RACK : RackConfig.NO_CONSUMER_RACK);
-        Random rand = new Random();
+        Random rand = new SecureRandom();
         int topicCount = 40;
         int consumerCount = 200;
 
@@ -1055,7 +1056,7 @@ public abstract class AbstractStickyAssignorTest {
         final int maxNumTopics = 20;
 
         for (int round = 1; round <= 100; ++round) {
-            int numTopics = minNumTopics + new Random().nextInt(maxNumTopics - minNumTopics);
+            int numTopics = minNumTopics + new SecureRandom().nextInt(maxNumTopics - minNumTopics);
 
             ArrayList<String> topics = new ArrayList<>();
 
@@ -1066,7 +1067,7 @@ public abstract class AbstractStickyAssignorTest {
                 partitionsPerTopic.put(topicName, partitionInfos(topicName, i + 1));
             }
 
-            int numConsumers = minNumConsumers + new Random().nextInt(maxNumConsumers - minNumConsumers);
+            int numConsumers = minNumConsumers + new SecureRandom().nextInt(maxNumConsumers - minNumConsumers);
 
             for (int i = 0; i < numConsumers; ++i) {
                 List<String> sub = Utils.sorted(getRandomSublist(topics));
@@ -1473,7 +1474,7 @@ public abstract class AbstractStickyAssignorTest {
     protected static List<String> getRandomSublist(ArrayList<String> list) {
         List<String> selectedItems = new ArrayList<>(list);
         int len = list.size();
-        Random random = new Random();
+        Random random = new SecureRandom();
         int howManyToRemove = random.nextInt(len);
 
         for (int i = 1; i <= howManyToRemove; ++i)

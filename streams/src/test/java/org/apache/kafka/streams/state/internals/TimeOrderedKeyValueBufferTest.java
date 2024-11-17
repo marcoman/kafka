@@ -16,6 +16,7 @@
  */
 package org.apache.kafka.streams.state.internals;
 
+import java.security.SecureRandom;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.Header;
@@ -92,7 +93,7 @@ public class TimeOrderedKeyValueBufferTest<B extends TimeOrderedKeyValueBuffer<S
     }
 
     private void setup(final String testName, final Function<String, B> bufferSupplier) {
-        this.testName = testName + "_" + new Random().nextInt(Integer.MAX_VALUE);
+        this.testName = testName + "_" + new SecureRandom().nextInt(Integer.MAX_VALUE);
         this.bufferSupplier = bufferSupplier;
     }
 

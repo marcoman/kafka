@@ -16,6 +16,7 @@
  */
 package org.apache.kafka.common.security.kerberos;
 
+import java.security.SecureRandom;
 import org.apache.kafka.common.config.SaslConfigs;
 import org.apache.kafka.common.security.JaasContext;
 import org.apache.kafka.common.security.JaasUtils;
@@ -50,7 +51,7 @@ import javax.security.auth.login.LoginException;
 public class KerberosLogin extends AbstractLogin {
     private static final Logger log = LoggerFactory.getLogger(KerberosLogin.class);
 
-    private static final Random RNG = new Random();
+    private static final Random RNG = new SecureRandom();
 
     private final Time time = Time.SYSTEM;
     private Thread t;
